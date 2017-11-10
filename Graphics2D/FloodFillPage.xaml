@@ -1,0 +1,118 @@
+﻿<Page x:Class="Graphics2D.FloodFillPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Graphics2D"
+      mc:Ignorable="d"
+      Title="FloodFillPage">
+    <Page.Resources>
+        <BitmapImage x:Key="OriginalBitmap" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="e:\documents\visual studio 2015\Projects\Graphics2D\Graphics2D\Resources\FloodFillBitmap.bmp"/>
+        <ControlTemplate x:Key="ColorRadioButtonControlTemplate" TargetType="{x:Type RadioButton}">
+            <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
+                <Border x:Name="radioButtonBorder" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" CornerRadius="3" Margin="1,1,1,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid x:Name="markGrid" Margin="2">
+                        <Ellipse x:Name="optionMark" MinWidth="6" MinHeight="6" Opacity="0"/>
+                    </Grid>
+                </Border>
+                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="HasContent" Value="True">
+                    <Setter Property="FocusVisualStyle">
+                        <Setter.Value>
+                            <Style>
+                                <Setter Property="Control.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Padding" Value="4,-1,0,0"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="#FF5593FF"/>
+                    <Setter Property="Fill" TargetName="optionMark" Value="#FF212121"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="#FFBCBCBC"/>
+                    <Setter Property="Fill" TargetName="optionMark" Value="#FF707070"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="#FF3C77DD"/>
+                    <Setter Property="Fill" TargetName="optionMark" Value="#FF212121"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="#FF3C77DD"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="{x:Null}">
+                    <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="#FF3C77DD"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Page.Resources>
+    <Page.Background>
+        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlLightColorKey}}"/>
+    </Page.Background>
+
+    <Grid>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="btnPauseResume" Width="50" Height="50" Click="btnPauseResume_Click" DockPanel.Dock="Top" IsEnabled="False"></Button>
+                <StackPanel VerticalAlignment="Center" Margin="20,0">
+                    <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="16">调整填充速度</TextBlock>
+                    <Slider x:Name="speedSlider" Maximum="20" Minimum="1" VerticalAlignment="Bottom" ValueChanged="speedSlider_ValueChanged" SmallChange="1" Value="10"/>
+                </StackPanel>
+                <Button x:Name="btnColorPicker" Width="50" Height="50"  DockPanel.Dock="Top" Click="btnColorPicker_Click" Margin="0" Content="选择颜色"/>
+                <Popup x:Name="popupColorPicker" PlacementTarget="{Binding ElementName=btnColorPicker, Mode=OneWay}" StaysOpen="False">
+                    <WrapPanel Width="160">
+                        <Grid Background="{DynamicResource {x:Static SystemColors.GradientActiveCaptionBrushKey}}">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FFF17F42">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FFE53A40">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FFF6B352">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FFF68657">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FFFADAD8">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FFFFBC42">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FF8CD790">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FFFF88A6">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                        <Grid Background="#FFFFFA59">
+                            <RadioButton Width="40" Height="20" Template="{DynamicResource ColorRadioButtonControlTemplate}" GroupName="Colors" Checked="RadioButton_Checked"/>
+                        </Grid>
+                    </WrapPanel>
+                </Popup>
+                <Button x:Name="btnReset" Width="50" Height="50"  DockPanel.Dock="Top" Click="btnReset_Click" Margin="0" Content="重新开始"/>
+            </StackPanel>
+
+            <TextBlock x:Name="textBlock" DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10"/>
+            <Image x:Name="fillImage" Cursor="Arrow" MouseLeftButtonUp="fillImage_MouseLeftButtonUp" />
+        </DockPanel>
+    </Grid>
+</Page>
